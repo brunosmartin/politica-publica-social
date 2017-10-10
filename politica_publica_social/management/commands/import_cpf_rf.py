@@ -11,15 +11,10 @@ import random
 
 User = get_user_model()
 
-collumns = [
-    'RF',
-    'cpf',
-    'name',
-    'occupation',
-    'email',
-]
-
-
+#
+# Expected columns in the CSV file: 'RF', 'cpf', 'name', 'occupation', 'email'
+# The class to be targeted is expected as a command line parameter
+#
 class Command(BaseCommand):
     args = 'file'
     help = 'import users to a group and class'
@@ -30,10 +25,10 @@ class Command(BaseCommand):
         if not len(args) == 2:
             raise CommandError('Incorrect parameters')
 
-        group, _ = models.Group.objects.get_or_create(name="Curso Reflexões")
+        group, _ = models.Group.objects.get_or_create(name="Curso Reflexões - 2")
         students = models.Group.objects.get(name="students")
-        
-        course = Course.objects.get(name='Reflexões sobre desenvolvimento infantil')
+
+        course = Course.objects.get(id=4)  # Reflexões sobre desenvolvimento infantil (second version)
         classs, _ = Class.objects.get_or_create(name=args[1], course=course)
 
         with open(args[0], 'r') as csvfile:
@@ -46,7 +41,7 @@ class Command(BaseCommand):
                 if cpf_length < 11:
                     for i in range(11-cpf_length):
                         cpf = '0' + cpf
-                
+
                 try:
                     with transaction.atomic():
                         user = User.objects.create(username=cpf, email=email)
@@ -57,7 +52,7 @@ class Command(BaseCommand):
                     user = User.objects.get(username=cpf)
                     profile = SindsepProfile.objects.get(user=user)
                     print('found ' + user.username)
-                
+
                 user.first_name, user.last_name = row.get('name').split(' ', 1 )
                 user.rg = row.get('RF')
                 if user.first_name:
@@ -74,16 +69,16 @@ class Command(BaseCommand):
 
 
                 user.save()
-                
+
                 profile.user = user
                 profile.cpf = cpf
                 profile.rf = row.get('RF')
                 profile.save()
-            
+
                 classs.students.add(user)
                 group.user_set.add(user)
                 students.user_set.add(user)
-                
+
                 count += 1
                 if count % 10 == 0:
                     self.stdout.write(str(count))
