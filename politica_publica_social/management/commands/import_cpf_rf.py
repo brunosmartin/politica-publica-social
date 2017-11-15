@@ -25,7 +25,7 @@ class Command(BaseCommand):
         if not len(args) == 2:
             raise CommandError('Incorrect parameters')
 
-        group, _ = models.Group.objects.get_or_create(name="Curso Reflexões - 2")
+        group, _ = models.Group.objects.get_or_create(name="Curso Reflexões - 3")
         students = models.Group.objects.get(name="students")
 
         course = Course.objects.get(id=4)  # Reflexões sobre desenvolvimento infantil (second version)
