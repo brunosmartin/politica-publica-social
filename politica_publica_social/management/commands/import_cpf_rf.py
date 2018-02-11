@@ -11,6 +11,7 @@ import random
 
 User = get_user_model()
 
+
 #
 # Expected columns in the CSV file: 'RF', 'cpf', 'name', 'occupation', 'email'
 # The class to be targeted is expected as a command line parameter
@@ -25,10 +26,10 @@ class Command(BaseCommand):
         if not len(args) == 2:
             raise CommandError('Incorrect parameters')
 
-        group, _ = models.Group.objects.get_or_create(name="Curso Reflexões - 3")
+        group, _ = models.Group.objects.get_or_create(name="Formação Cidadã - 2")
         students = models.Group.objects.get(name="students")
 
-        course = Course.objects.get(id=4)  # Reflexões sobre desenvolvimento infantil (second version)
+        course = Course.objects.get(id=5)  # Formação Cidadã - Olhares sobre o Currículo da Cidade de São Paulo
         classs, _ = Class.objects.get_or_create(name=args[1], course=course)
 
         with open(args[0], 'r') as csvfile:
@@ -66,7 +67,6 @@ class Command(BaseCommand):
 
                 if row.has_key('occupation'):
                     user.occupation = row.get('occupation')
-
 
                 user.save()
 
