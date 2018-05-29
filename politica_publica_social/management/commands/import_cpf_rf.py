@@ -26,7 +26,8 @@ class Command(BaseCommand):
         if not len(args) == 2:
             raise CommandError('Incorrect parameters')
 
-        group, _ = models.Group.objects.get_or_create(name="Formação Cidadã - 2")
+        print('Preparing to import data for "Curso Reflexões - 4"')
+        group, _ = models.Group.objects.get_or_create(name="Curso Reflexões - 4")
         students = models.Group.objects.get(name="students")
 
         course = Course.objects.get(id=5)  # Formação Cidadã - Olhares sobre o Currículo da Cidade de São Paulo
